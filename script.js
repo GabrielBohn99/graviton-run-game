@@ -5,6 +5,7 @@ document.getElementById("start-button").onclick = () => {
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 let frames = 0;
+let obsArr = [];
 
 //Images
 let img = new Image();
@@ -37,7 +38,7 @@ let player = {
     }
   },
 
-  pulo: function() {
+  changeG: function() {
     this.gravity *= -1;
     if (this.normalG) {
       this.normalG = false;
@@ -46,10 +47,89 @@ let player = {
     }
   },
 
-  draw: function() {
+  update: function() {
     ctx.fillStyle = "red";
     ctx.fillRect(55, this.y, 20, 30);
+  },
+
+  right() {
+    return this.x + this.width;
+  },
+
+  top() {
+    return this.y;
+  },
+
+  bottom() {
+    return this.y + this.height;
+  },
+
+  crashWith(obstacle) {
+    return !(
+      this.bottom() < obstacle.top() ||
+      this.top() > obstacle.bottom() ||
+      this.right() < obstacle.left() ||
+      this.left() > obstacle.right()
+    );
   }
+};
+
+let obstacles = {
+  width: 30,
+  velocity: 6,
+  addObs: function() {
+    let randomN = Math.floor(Math.random() * 2);
+    let randomHeight = Math.floor(Math.random() * 180);
+    if (randomN === 0) {
+      randomY = 20;
+    } else {
+      randomY = 250 - randomHeight;
+    }
+    obsArr.push({
+      x: 500,
+      y: randomY,
+      width: 30,
+      height: 30 + randomHeight,
+      cor: "#" + Math.floor(Math.random() * 16777216).toString(16)
+    });
+  },
+  moveObs: function() {
+    // if (frames % 100 === 0) {
+    //   this.addObs();
+    for (let i = 0; i < obsArr.length; i++) {
+      let obs = obsArr[i];
+      obs.x -= this.velocity;
+      // console.log(obs.x);
+      if (obs.x <= -30) {
+        obsArr.splice(i, 1);
+        i--;
+      }
+    }
+    // }
+  },
+  update: function() {
+    for (let i = 0; i < obsArr.length; i++) {
+      let obs = obsArr[i];
+      ctx.fillStyle = obs.cor;
+      ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+    }
+  },
+
+  left() {
+    return this.x;
+  },
+
+  right() {
+    return this.x + this.width;
+  },
+
+  top() {
+    return this.y;
+  },
+
+  bottom() {
+    return this.y + this.height;
+  },
 };
 
 let ground = {
@@ -71,8 +151,8 @@ let ceiling = {
 let controller = {
   keylistener: function(event) {
     if (event.keyCode === 32) {
-      console.log("pulo!!!!");
-      player.pulo();
+      console.log("changeG!!!!");
+      player.changeG();
     }
   }
 };
@@ -102,6 +182,8 @@ let backgroundImage = {
 //start game and functions
 
 function startGame() {
+  //   obstacles.addObs();
+  obstacles.addObs();
   requestId = window.requestAnimationFrame(updateGameArea);
 }
 
@@ -110,20 +192,30 @@ function clear() {
   ctx.clearRect(0, 0, 500, 300);
 }
 
+function stop() {
+    // clearInterval(this.interval);
+    window.cancelAnimationFrame(requestId);
+}
+
 function updateGameArea() {
-  // update the player's position before drawing
   clear();
-  // newPlayer.newPos();
-  // newPlayer.update();
   // moving bg image
+  frames += 1;
   backgroundImage.move();
   backgroundImage.draw();
   ground.draw();
   ceiling.draw();
-  player.draw();
+  // update the player's position before drawing
+  player.update();
   player.applyGforce();
+  // newPlayer.newPos();
+  // newPlayer.update();
   // update the obstacles array
-  // updateObstacles();
+  if (frames % 60 === 0) {
+    obstacles.addObs();
+  }
+  obstacles.moveObs();
+  obstacles.update();
   // animate the canvas
   requestId = window.requestAnimationFrame(updateGameArea);
   // check if the game should stop
@@ -131,6 +223,16 @@ function updateGameArea() {
   // update and draw the score
   // myGameArea.score();
 }
+
+function checkGameOver() {
+    var crashed = obsArr.some(function(obstacle) {
+      return player.crashWith(obstacle);
+    });
+  
+    if (crashed) {
+      stop();
+    }
+  }
 
 //editar dps os nomes da chamada
 window.addEventListener("keydown", controller.keylistener);

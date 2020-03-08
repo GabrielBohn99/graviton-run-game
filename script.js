@@ -28,24 +28,27 @@ let player = {
       if (this.y > ground.y - 30) {
         this.y = ground.y - 30;
         this.yVelocity = 0;
-        // console.log(this.normalG)
       }
     } else {
       if (this.y < ceiling.height) {
         this.yVelocity = 0;
         this.y = ceiling.height;
-        // console.log(this.normalG)
       }
     }
   },
 
   pulo: function() {
-    this.yVelocity -= 20;
+    this.gravity *= -1;
+    if (this.normalG) {
+      this.normalG = false;
+    } else {
+      this.normalG = true;
+    }
   },
 
   draw: function() {
     ctx.fillStyle = "red";
-    ctx.fillRect(40, this.y, 20, 30);
+    ctx.fillRect(55, this.y, 20, 30);
   }
 };
 
@@ -66,21 +69,11 @@ let ceiling = {
 };
 
 let controller = {
-  //   space: false,
-
   keylistener: function(event) {
-    // let key_state = (event.type == "keydown") ? true : false;
-
     if (event.keyCode === 32) {
-      //   player.gravity *= -1;
-      //   player.normalG = key_state;
       console.log("pulo!!!!");
       player.pulo();
     }
-
-    // switch(event.keyCode) {
-
-    // }
   }
 };
 
@@ -109,9 +102,6 @@ let backgroundImage = {
 //start game and functions
 
 function startGame() {
-  //   console.log("start function");
-  // backgroundImage.move();
-  // backgroundImage.draw();
   requestId = window.requestAnimationFrame(updateGameArea);
 }
 
@@ -131,7 +121,7 @@ function updateGameArea() {
   ground.draw();
   ceiling.draw();
   player.draw();
-    player.applyGforce();
+  player.applyGforce();
   // update the obstacles array
   // updateObstacles();
   // animate the canvas
@@ -144,4 +134,3 @@ function updateGameArea() {
 
 //editar dps os nomes da chamada
 window.addEventListener("keydown", controller.keylistener);
-// window.addEventListener("keyup", controller.keylistener);

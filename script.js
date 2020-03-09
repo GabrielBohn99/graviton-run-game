@@ -7,12 +7,12 @@ const ctx = canvas.getContext("2d");
 let frames = 0;
 let obsArr = [];
 
-//Images
+// Images
 let img = new Image();
 img.src = "images/space-bg.jpg";
 
-//declaring main objects and game parts
-
+// declaring main objects and game parts
+// game area
 var myGameArea = {
   frames: 0,
   groundY: 280,
@@ -38,11 +38,12 @@ var myGameArea = {
   },
 
   stop: function() {
-    // clearInterval(this.interval);
+    console.log("game over");
     window.cancelAnimationFrame(requestId);
   }
-}
+};
 
+// declaring player class
 class Player {
   constructor(width, height, color, x, y) {
     this.width = width;
@@ -50,6 +51,10 @@ class Player {
     this.color = color;
     this.x = x;
     this.y = y;
+    this.top = this.y;
+    this.left = this.x;
+    this.right = this.x + this.width;
+    this.bottom = this.y + this.height;
     (this.normalG = true), (this.gravity = 1.5), (this.yVelocity = 0);
   }
   update() {
@@ -79,29 +84,24 @@ class Player {
       this.normalG = true;
     }
   }
-  // left() {
-  //   return this.x;
-  // }
-  // right() {
-  //   return this.x + this.width;
-  // }
-  // top() {
-  //   return this.y;
-  // }
-  // bottom() {
-  //   return this.y + this.height;
-  // }
-
-  // crashWith(obstacle) {
-  //   return !(
-  //     this.bottom() < obstacle.top() ||
-  //     this.top() > obstacle.bottom() ||
-  //     this.right() < obstacle.left() ||
-  //     this.left() > obstacle.right()
-  //   );
-  // }
+  crashWith(obstacle) {
+    if (this.normalG) {
+      return !(
+        this.bottom < obstacle.y ||
+        this.top > obstacle.y + obstacle.height ||
+        this.right < obstacle.x
+      );
+    } else {
+      return !(
+        this.bottom > obstacle.y ||
+        this.top < obstacle.y + obstacle.height ||
+        this.right > obstacle.x
+      );
+    }
+  }
 }
 
+// declaring how obstacles are created
 let obstacles = {
   width: 30,
   velocity: 6,
@@ -142,8 +142,7 @@ let obstacles = {
 
 let controller = {
   keylistener: function(event) {
-    if (event.keyCode === 32) {
-      console.log("changeG!!!!");
+    if (event.keyCode === 71) {
       player.changeG();
     }
   }
@@ -177,18 +176,17 @@ let player = new Player(20, 30, "red", 55, 250);
 
 function updateGameArea() {
   myGameArea.clear();
-  // moving bg image
   frames += 1;
+  // moving bg image
   backgroundImage.move();
   backgroundImage.draw();
+  // drawing ceiling and floor
   myGameArea.ground();
   myGameArea.ceiling();
-  // update the player's position before drawing
+  // drawing player
   player.update();
   player.applyGforce();
-  // newPlayer.newPos();
-  // newPlayer.update();
-  // update the obstacles array
+  // creating, moving, and drawing obstacles
   if (frames % 60 === 0) {
     obstacles.addObs();
   }
@@ -197,20 +195,20 @@ function updateGameArea() {
   // animate the canvas
   requestId = window.requestAnimationFrame(updateGameArea);
   // check if the game should stop
-  // checkGameOver();
+  checkGameOver();
   // update and draw the score
   // myGameArea.score();
 }
 
 function checkGameOver() {
-  var crashed = obsArr.some(function(obstacle) {
+  let crashed = obsArr.some(function(obstacle) {
     return player.crashWith(obstacle);
   });
 
   if (crashed) {
-    stop();
+    myGameArea.stop();
   }
 }
 
-//editar dps os nomes da chamada
+// get player command
 window.addEventListener("keydown", controller.keylistener);

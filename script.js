@@ -187,15 +187,38 @@ function updateGameArea() {
   player.update();
   player.applyGforce();
   // creating, moving, and drawing obstacles
-  if (frames % 60 === 0) {
-    obstacles.addObs();
+  if (frames < 2000) {
+    if (frames % 50 === 0) {
+      obstacles.addObs();
+    }
+  } else if (frames < 4000) {
+    if (frames % 40 === 0) {
+      obstacles.addObs();
+    }
+  } else if (frames < 5200) {
+    if (frames % 30 === 0) {
+      obstacles.addObs();
+    }
+  } else if (frames < 7300) {
+    if (frames % 25 === 0) {
+      obstacles.addObs();
+    }
+  } else {
+    if (player.normalG) {
+      player.gravity = 3;
+    } else {
+      player.gravity = -3;
+    }
+    if (frames % 20 === 0) {
+      obstacles.addObs();
+    }
   }
   obstacles.moveObs();
   obstacles.update();
   // animate the canvas
   requestId = window.requestAnimationFrame(updateGameArea);
   // check if the game should stop
-  checkGameOver();
+  // checkGameOver();
   // update and draw the score
   // myGameArea.score();
 }

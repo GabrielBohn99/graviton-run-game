@@ -74,6 +74,8 @@ var myGameArea = {
     spaceship.velocity = 3;
     player.gravity = 1.5;
     startGame = false;
+    player.normalG = true;
+    player.y = 250;
     audio.play();
     this.score(true);
     frames = 0;
@@ -93,7 +95,7 @@ var myGameArea = {
     ctx.fillText("Press Enter to restart", 120, 70);
     window.cancelAnimationFrame(requestId);
   },
-  
+
   score: function(reset) {
     if (reset) {
       var points = 0;
@@ -169,11 +171,10 @@ let floorImg = {
 
 // declaring player class
 class Player {
-  constructor(width, height, color, x, y, animation) {
+  constructor(width, height, x, y, animation) {
     this.animation = animation;
     this.width = width;
     this.height = height;
-    this.color = color;
     this.x = x;
     this.y = y;
     (this.normalG = true), (this.gravity = 1.5), (this.yVelocity = 0);
@@ -402,16 +403,18 @@ let spaceship = {
 let controller = {
   keylistener: function(event) {
     if (event.keyCode === 32) {
-      player.changeG();
+      if (startGame) {
+        player.changeG();
+      }
     }
     if (event.keyCode === 13) {
       if (!startGame) {
+        myGameArea.startGame();
         startGame = true;
       }
     }
   }
 };
-
 
 let sprite_sheet = {
   frame_sets: [[3, 6]]
@@ -422,7 +425,6 @@ let sprite_sheet = {
 let player = new Player(
   SPRITE_SIZE,
   SPRITE_SIZE,
-  "red",
   55,
   250,
   new Animation()
@@ -439,7 +441,7 @@ function updateGameArea() {
   ceilingImg.draw();
   floorImg.move();
   floorImg.draw();
-
+  // drawing spaceship on background
   if (frames % 240 === 0) {
     spaceship.addNav();
   }

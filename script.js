@@ -1,8 +1,11 @@
+let startGame = false;
 document.getElementById("start-button").onclick = () => {
-  myGameArea.startGame();
+  if (!startGame) {
+    myGameArea.startGame();
+    startGame = true;
+  }
 };
 
-let startGame = false;
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 let frames = 0;
@@ -31,17 +34,31 @@ let img9 = new Image();
 img9.src = "images/spaceship2.png";
 let img10 = new Image();
 img10.src = "images/space-marine-run-180.png";
+let img11 = new Image();
+img11.src = "images/spaceship3.png";
+let img12 = new Image();
+img12.src = "images/spaceship4.png";
+let img13 = new Image();
+img13.src = "images/GAME-OVER.jpg";
+
+// Audios
+let audio = new Audio();
+audio.src = "audios/lase-sound.mp3"
+let audio2 = new Audio();
+audio2.src = "audios/bg-sound-start.mp3"
+let audio3 = new Audio();
+audio3.src = "audios/bg-sound-speed-up.mp3"
 
 // declaring main objects and game parts
 // game area
 var myGameArea = {
   points: 0,
   topScore: 0,
-  frames: 0,
   groundY: 270,
   y: 270,
   height: 30,
   startGame: function() {
+    audio2.play();
     obstacles.addObs();
     requestId = window.requestAnimationFrame(updateGameArea);
   },
@@ -51,26 +68,29 @@ var myGameArea = {
   },
 
   stop: function() {
-    console.log("game over");
-    // this.clear();
-    // ctx.fillStyle = 'black';
-    // ctx.fillRect(0, 0, 500, 300);
-    ctx.beginPath();
-    ctx.font = "70px sans-serif";
-    ctx.fillStyle = "white";
-    ctx.fillText("Game Over", 75, 100);
-    ctx.font = "40px sans-serif";
-    ctx.fillText("Final Score:" + this.points, 140, 180);
-    ctx.beginPath();
-    ctx.fillStyle = "white";
-    ctx.font = "25px sans-serif";
-    ctx.fillText("Press R to restart", 140, 243);
+    audio2.pause();
+    audio3.pause();
+    startGame = false;
+    audio.play();
+    this.score(true);
+    frames = 0;
     obsArr = [];
     if (this.points > this.topScore) {
       this.topScore = this.points;
     }
+    ctx.beginPath();
+    ctx.drawImage(img13, 0, 0, 500, 300);
+    ctx.beginPath();
+    // ctx.font = "70px sans-serif";
+    // ctx.fillStyle = "white";
+    // ctx.fillText("Game Over", 50, 100);
+    ctx.font = "40px sans-serif";
+    ctx.fillText("Final Score:" + this.points, 125, 270);
     this.points = 0;
-    this.score(true);
+    // ctx.beginPath();
+    // ctx.fillStyle = "white";
+    // ctx.font = "25px sans-serif";
+    // ctx.fillText("Press Enter to restart", 120, 243);
     window.cancelAnimationFrame(requestId);
   },
 
@@ -83,7 +103,9 @@ var myGameArea = {
     ctx.font = "18px sans-serif";
     ctx.fillStyle = "#ebb02c";
     ctx.fillText("Score: " + points, 30, 20);
-    ctx.fillText("Top score:" + this.topScore, 200, 20);
+    if (this.topScore != 0) {
+      ctx.fillText("Top score:" + this.topScore, 200, 20);
+    }
     this.points = points;
   }
 };
@@ -172,24 +194,24 @@ class Player {
   crashWith(obstacle) {
     if (this.y === 30) {
       return !(
-        this.bottom() < obstacle.y + 18 ||
-        this.top() > obstacle.y + obstacle.height - 16 ||
+        this.bottom() < obstacle.y + 20 ||
+        this.top() > obstacle.y + obstacle.height - 10 ||
         this.right() < obstacle.x ||
         this.left() > obstacle.x + obstacle.width - 8
       );
-    } else if (this.y === 240) {
+    } else if (this.y === 234) {
       return !(
-        this.bottom() < obstacle.y + 18 ||
-        this.top() > obstacle.y + obstacle.height - 16 ||
+        this.bottom() < obstacle.y + 20 ||
+        this.top() > obstacle.y + obstacle.height - 10 ||
         this.right() < obstacle.x ||
         this.left() > obstacle.x + obstacle.width - 8
       );
     } else {
       return !(
-        this.bottom() < obstacle.y + 18 ||
-        this.top() > obstacle.y + obstacle.height - 16 ||
-        this.right() < obstacle.x + 8 ||
-        this.left() > obstacle.x + obstacle.width - 8
+        this.bottom() < obstacle.y + 20 ||
+        this.top() > obstacle.y + obstacle.height - 18 ||
+        this.right() < obstacle.x + 10 ||
+        this.left() > obstacle.x + obstacle.width - 13
       );
     }
   }
@@ -228,6 +250,7 @@ class Animation {
       this.frame = this.frame_set[this.frame_index];
     }
   }
+
   draw() {
     if (player.normalG) {
       ctx.drawImage(
@@ -263,7 +286,7 @@ let obstacles = {
   velocity: 6,
   addObs: function() {
     let randomN = Math.floor(Math.random() * 2);
-    let randomHeight = Math.floor(Math.random() * 110);
+    let randomHeight = Math.floor(Math.random() * 100);
     if (randomN === 0) {
       randomY = 30;
     } else {
@@ -304,7 +327,7 @@ let spaceship = {
   velocity: 3,
   addNav: function() {
     randomY = Math.floor(Math.random() * 211);
-    randImg = Math.floor(Math.random() * 2);
+    randImg = Math.floor(Math.random() * 4);
     if (randImg === 0) {
       naveArr.push({
         x: 500,
@@ -313,13 +336,29 @@ let spaceship = {
         height: 45,
         image: img8
       });
-    } else {
+    } else if (randImg === 1) {
       naveArr.push({
         x: 500,
         y: randomY + 30,
         width: 30,
         height: 45,
         image: img9
+      });
+    } else if (randImg === 2) {
+      naveArr.push({
+        x: 500,
+        y: randomY + 30,
+        width: 30,
+        height: 45,
+        image: img11
+      });
+    } else {
+      naveArr.push({
+        x: 500,
+        y: randomY + 30,
+        width: 30,
+        height: 55,
+        image: img12
       });
     }
   },
@@ -343,11 +382,14 @@ let spaceship = {
 
 let controller = {
   keylistener: function(event) {
-    if (event.keyCode === 71) {
+    if (event.keyCode === 32) {
       player.changeG();
     }
-    if (event.keyCode === 82) {
-      window.location.reload();
+    if (event.keyCode === 13) {
+      if (!startGame) {
+        myGameArea.startGame();
+        startGame = true;
+      }
     }
   }
 };
@@ -372,12 +414,19 @@ let backgroundImage = {
 };
 
 let sprite_sheet = {
-  frame_sets: [[3, 6]],
+  frame_sets: [[3, 6]]
 };
 
 //start game and functions
 
-let player = new Player(SPRITE_SIZE, SPRITE_SIZE, "red", 55, 250, new Animation());
+let player = new Player(
+  SPRITE_SIZE,
+  SPRITE_SIZE,
+  "red",
+  55,
+  250,
+  new Animation()
+);
 
 function updateGameArea() {
   myGameArea.clear();
@@ -403,6 +452,8 @@ function updateGameArea() {
   player.applyGforce();
   // creating, moving, and drawing obstacles
   if (frames < 2000) {
+    audio2.pause();
+    audio3.play();
     backgroundImage.speed = -2;
     if (frames % 50 === 0) {
       obstacles.addObs();
@@ -425,6 +476,7 @@ function updateGameArea() {
   } else {
     if (player.normalG) {
       backgroundImage.speed = -6;
+      spaceship.velocity = 6;
       player.gravity = 3;
     } else {
       player.gravity = -3;

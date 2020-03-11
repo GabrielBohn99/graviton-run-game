@@ -1,33 +1,83 @@
-html {
-    font-size: 15px;
-}
-
 body {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    /* font-family: Arial, Helvetica, sans-serif; */
+  padding: 0;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  background-image: url("images/bg-html.jpg");
 }
 
-canvas {
-    border: 2px solid red;
+.game-intro {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  align-content: stretch;
+  padding: 0% 10%;
+  width: 50vw;
 }
 
-#game-intro {
-    width: 500px;
+h1 {
+  margin-top: 50px;
+  margin-bottom: 0;
+  color: #ebb02c;
+  font-family: "Faster One", cursive;
+  font-size: 90px;
+  text-shadow: black;
+  /* border: 2px solid black; */
 }
 
-#start-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.run {
+  margin-top: 10px;
+}
+
+.paragraph {
+  color: #ebb02c;
+  text-align: center;
+  font-size: 18px;
+  font-family: "Verdana";
+}
+
+.image-logo {
+  /* display: flex; */
+  width: 230px;
+  height: 210px;
+}
+
+.logo-img {
+  width: 350px;
+}
+
+body button {
+  font-size: 30px;
+  background-color: #870007;
+  color: #fff;
+  padding: 20px 40px;
+  border: 0;
+  box-shadow: 0;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 #game-area {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  align-content: stretch;
+  float: left;
+  padding: 20px 0px;
+  /* width: 50vw; */
+}
 
+canvas {
+  margin-top: 50px;
+  background-color: black;
+  /* background-image: url('../images/road.png');
+    background-size: cover; */
 }

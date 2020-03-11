@@ -406,7 +406,6 @@ let controller = {
     }
     if (event.keyCode === 13) {
       if (!startGame) {
-        myGameArea.startGame();
         startGame = true;
       }
     }

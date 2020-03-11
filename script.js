@@ -43,11 +43,11 @@ img13.src = "images/GAME-OVER.jpg";
 
 // Audios
 let audio = new Audio();
-audio.src = "audios/lase-sound.mp3"
+audio.src = "audios/lase-sound.mp3";
 let audio2 = new Audio();
-audio2.src = "audios/bg-sound-start.mp3"
+audio2.src = "audios/bg-sound-start.mp3";
 let audio3 = new Audio();
-audio3.src = "audios/bg-sound-speed-up.mp3"
+audio3.src = "audios/bg-sound-speed-up.mp3";
 
 // declaring main objects and game parts
 // game area
@@ -70,6 +70,9 @@ var myGameArea = {
   stop: function() {
     audio2.pause();
     audio3.pause();
+    backgroundImage.speed = -1;
+    spaceship.velocity = 3;
+    player.gravity = 1.5;
     startGame = false;
     audio.play();
     this.score(true);
@@ -81,19 +84,16 @@ var myGameArea = {
     ctx.beginPath();
     ctx.drawImage(img13, 0, 0, 500, 300);
     ctx.beginPath();
-    // ctx.font = "70px sans-serif";
-    // ctx.fillStyle = "white";
-    // ctx.fillText("Game Over", 50, 100);
     ctx.font = "40px sans-serif";
     ctx.fillText("Final Score:" + this.points, 125, 270);
     this.points = 0;
-    // ctx.beginPath();
-    // ctx.fillStyle = "white";
-    // ctx.font = "25px sans-serif";
-    // ctx.fillText("Press Enter to restart", 120, 243);
+    ctx.beginPath();
+    ctx.fillStyle = "white";
+    ctx.font = "25px sans-serif";
+    ctx.fillText("Press Enter to restart", 120, 70);
     window.cancelAnimationFrame(requestId);
   },
-
+  
   score: function(reset) {
     if (reset) {
       var points = 0;
@@ -107,6 +107,25 @@ var myGameArea = {
       ctx.fillText("Top score:" + this.topScore, 200, 20);
     }
     this.points = points;
+  }
+};
+
+let backgroundImage = {
+  x: 0,
+  speed: -1,
+
+  move: function() {
+    this.x += this.speed;
+    this.x %= 500;
+  },
+
+  draw: function() {
+    ctx.drawImage(img, this.x, 0, 500, 300);
+    if (this.speed < 0) {
+      ctx.drawImage(img, this.x + 500, 0, 500, 300);
+    } else {
+      ctx.drawImage(img, this.x - img.width, 0, 500, 300);
+    }
   }
 };
 
@@ -394,24 +413,6 @@ let controller = {
   }
 };
 
-let backgroundImage = {
-  x: 0,
-  speed: -1,
-
-  move: function() {
-    this.x += this.speed;
-    this.x %= 500;
-  },
-
-  draw: function() {
-    ctx.drawImage(img, this.x, 0, 500, 300);
-    if (this.speed < 0) {
-      ctx.drawImage(img, this.x + 500, 0, 500, 300);
-    } else {
-      ctx.drawImage(img, this.x - img.width, 0, 500, 300);
-    }
-  }
-};
 
 let sprite_sheet = {
   frame_sets: [[3, 6]]
@@ -463,12 +464,14 @@ function updateGameArea() {
     if (frames % 40 === 0) {
       obstacles.addObs();
     }
-  } else if (frames < 5200) {
+  } else if (frames < 5500) {
+    spaceship.velocity = 4;
     backgroundImage.speed = -4;
     if (frames % 30 === 0) {
       obstacles.addObs();
     }
-  } else if (frames < 7300) {
+  } else if (frames < 7500) {
+    spaceship.velocity = 5;
     backgroundImage.speed = -5;
     if (frames % 25 === 0) {
       obstacles.addObs();

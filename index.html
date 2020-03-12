@@ -3,18 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="https://fonts.googleapis.com/css?family=Faster+One&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css?family=Faster+One&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="style.css" />
     <title>Graviton Run</title>
   </head>
   <body>
     <div id="game-intro">
-      <h1>Graviton </h1>
+      <h1>Graviton</h1>
       <h1 class="run">Run</h1>
       <!-- <img class="image-logo" src="images/space-marine-run-logo.png" alt="" /> -->
       <br />
-      <button id="start-button">StartGame</button> 
-      <p class="paragraph">Dodge the lasers by changing the gravity.<br /> Use spacebar to switch between them.</p>
+      <button id="start-button">StartGame</button>
+      <br />
+      <div class="instructions">
+        <img class="key" src="./images/spacekey2.png" alt="" />
+        <p class="paragraph">
+          Dodge the lasers by changing the gravity.<br />
+          Use spacebar to switch between them.
+        </p>
+      </div>
     </div>
     <div id="game-area">
       <canvas id="canvas" width="500" height="300"></canvas>

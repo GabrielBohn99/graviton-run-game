@@ -12,8 +12,7 @@ There you will see the instructions for playing below the start button!
 
 
 
-## Installation
-Clone or download this project, open the index.html file in your browser and have Fun.
+![In game image](./images/inGame.png)
 
 
 
@@ -27,6 +26,11 @@ You have only **1** life. Be careful!
 When you die you have three options to restart: **ENTER**, **SPACEBAR** and the **START BUTTON**.
 
 Good luck and have fun!
+
+
+
+## Installation
+Clone or download this project, open the index.html file in your browser and have Fun.
 
 
 

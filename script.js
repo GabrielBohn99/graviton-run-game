@@ -50,6 +50,7 @@ let audio3 = new Audio();
 audio3.src = "audios/bg-sound-speed-up.mp3";
 
 // declaring main objects and game parts
+
 // game area
 var myGameArea = {
   points: 0,

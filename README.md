@@ -1,4 +1,7 @@
- IronHack-graviton-run-game
+## Graviton Run
+
+
+IronHack-graviton-run-game
 > "Graviton Run" is a game built in HTML, canvas, CSS and Javascript.
 
 

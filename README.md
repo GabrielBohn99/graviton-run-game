@@ -9,9 +9,16 @@ Clone or download this project, open the index.html file in your browser and hav
 
 
 
-## Usage example
-Instructions to play this game:
-* Click in start game to start playing.
-* Watch out for obstacles.
-* Use spacebar to switch between gravity.
-* Dodge the lasers and set a new record!
+## How to Play
+Press **START** and then your adventure will begin.
+
+Use the **SPACEBAR** to switch between the gravityes and dodge the lasers.
+
+You have only **1** life. Be careful! 
+
+Good luck and have fun!
+
+
+
+## Contributing
+You are totally allowed to contribute with this project. To do that, fork this repository, make your changes and create a pull request.
